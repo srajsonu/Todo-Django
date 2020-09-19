@@ -1,16 +1,25 @@
 from django.db import models
 
 # Create your models here.
+from django.utils import timezone
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.name
+
+
+
 class Task(models.Model): #table
     content = models.TextField() #column
-    deadline = models.DateTimeField()
-    created_at = models.DateTimeField()
-    completed_at = models.DateTimeField()
-    tags = models.ManyToManyField(Tag)
+    created_at = models.DateTimeField(
+        default=timezone.now()
+    )
+    deadline = models.DateTimeField(null=True, blank=True)
+    completed_at = models.DateTimeField(null=True)
+    tags = models.ManyToManyField(Tag, null=True, blank=True)
 
     class TaskStatus(models.TextChoices):
         COMPLETED = "CO", "Completed"
@@ -22,6 +31,11 @@ class Task(models.Model): #table
         default=TaskStatus.PENDING,
         max_length=2
     )
+
+    def __str__(self):
+        return self.content
+
+
 
 
 
